@@ -1,8 +1,10 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
-use super::types::{ PricesResponse, CandleStick, CandleStickData, State };
-use std::{error::Error};
+use crate::strategies::state::State;
+
+use super::types::{ PricesResponse, CandleStick, CandleStickData, Adapter };
+use std::error::Error;
 use std::cell::Cell;
 
 
@@ -23,27 +25,34 @@ impl TestAdapter {
 
         TestAdapter { index: Cell::new(0), prices: prices_vec }
     }
+}
 
-    pub fn get_data(&self) -> Vec<PricesResponse> {
+impl Adapter for TestAdapter {
+    fn get_data(&self) -> Vec<PricesResponse> {
         let i = self.index.get();
         self.index.set(i+1);
         self.prices[i].clone()
     }
 
-    pub fn buy_request(&self, state: &mut State) -> String {
+    fn buy_request(&self, state: Box<dyn State>) -> String {
         "buy request".to_string()
     }
 
-    fn sell_request(&self, state: &mut State) -> String {
+    fn sell_request(&self, state: Box<dyn State>) -> String {
         "sell request".to_string()
     }
 
-    fn stop_buy_request(&self, state: &mut State) -> String {
+    fn stop_buy_request(&self, state: Box<dyn State>) -> String {
         "stop buy request".to_string()
     }
 
-    fn stop_sell_request(&self, state: &mut State) -> String {
+    fn stop_sell_request(&self, state: Box<dyn State>) -> String {
         "stop sell request".to_string()
+    }
+
+    fn update_profit(&mut self, state: Box<dyn State>) -> String {
+        // state.set_profit(0.0);
+        "Profit updated".to_string()
     }
 }
 

@@ -1,5 +1,9 @@
 mod adapters;
 mod strategies;
+
+use strategies::{tfs::TfsStrategy, strategy::Strategy};
+
 fn main() {
-    strategies::tfs::run_strategy(100, 100, 100);
+    let mut strategy = TfsStrategy::new();
+    strategy.run_strategy();
 }
